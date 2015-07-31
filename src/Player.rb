@@ -1,5 +1,7 @@
 require 'gosu'
 
+require_relative 'ZOrder'
+
 class Player
   def initialize
     @image = Gosu::Image.new("media/Starfighter.png")
@@ -36,5 +38,15 @@ class Player
 
   def draw
     @image.draw_rot(@x, @y, 1, @angle)
+  end
+
+  def score
+    @score
+  end
+
+  def collect_stars(stars)
+    if stars.reject! {|star| Gosu::distance(@x, @y, star.x, star.y) < 35 } then
+      @score += 1
+    end
   end
 end

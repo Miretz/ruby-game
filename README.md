@@ -6,4 +6,4 @@ https://www.libgosu.org/
 
 get dependencies 'bundle install'
 
-to run 'bundle exec ruby GameWindow.rb'
+to run 'bundle exec ruby src/GameWindow.rb '
