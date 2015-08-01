@@ -1,5 +1,6 @@
 require 'gosu'
 
+require_relative 'Constants'
 require_relative 'ZOrder'
 
 class Player
@@ -32,8 +33,8 @@ class Player
   def move
     @x += @vel_x
     @y += @vel_y
-    @x %= 640
-    @y %= 480
+    @x %= Constants::WIDTH
+    @y %= Constants::HEIGHT
 
     @vel_x *= 0.95
     @vel_y *= 0.95

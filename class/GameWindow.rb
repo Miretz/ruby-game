@@ -1,18 +1,19 @@
 require 'gosu'
 
+require_relative 'Constants'
 require_relative 'ZOrder'
 require_relative 'Player'
 require_relative 'Star'
 
 class GameWindow < Gosu::Window
   def initialize
-    super 640, 480
+    super Constants::WIDTH, Constants::HEIGHT
     self.caption = "Gosu Tutorial Game"
 
     @background_image = Gosu::Image.new("media/Space.png", :tileable => true)
   
     @player = Player.new
-    @player.warp(320, 240)
+    @player.warp(640, 480)
 
     @star_anim = Gosu::Image::load_tiles("media/Star.png", 25, 25)
     @stars = Array.new
@@ -33,15 +34,15 @@ class GameWindow < Gosu::Window
     @player.move
 
     @player.collect_stars(@stars)
-    if rand(100) < 4 and @stars.size < 25 then
+    if rand(100) < 4 and @stars.size < 3 then
       @stars.push(Star.new(@star_anim))
     end
   end
 
   def draw
-  	@player.draw
-  	@background_image.draw(0, 0, 0)
-    @stars.each { |star| star.draw }
+  	@background_image.draw(0, 0, ZOrder::Background)
+    @player.draw
+  	@stars.each { |star| star.draw }
     @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
   end
 

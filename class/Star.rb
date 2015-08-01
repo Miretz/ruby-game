@@ -1,5 +1,6 @@
 require 'gosu'
 
+require_relative 'Constants'
 require_relative 'ZOrder'
 
 class Star
@@ -11,8 +12,8 @@ class Star
     @color.red = rand(256 - 40) + 40
     @color.green = rand(256 - 40) + 40
     @color.blue = rand(256 - 40) + 40
-    @x = rand * 640
-    @y = rand * 480
+    @x = rand * Constants::WIDTH
+    @y = rand * Constants::HEIGHT
   end
 
   def draw  
