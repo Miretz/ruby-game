@@ -48,6 +48,12 @@ class Player
     @score
   end
 
+  def lose_star
+    if @score > 0
+      @score -= 10
+    end
+  end
+
   def collect_stars(stars)
     stars.reject! do |star|
       if Gosu::distance(@x, @y, star.x, star.y) < 35 then
