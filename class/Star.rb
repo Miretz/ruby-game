@@ -6,7 +6,7 @@ require_relative 'ZOrder'
 class Star
   attr_reader :x, :y
 
-  LIFE_TIME = 8000 # ms
+  LIFE_TIME = 6000 # ms
 
   def initialize(animation)
     @animation = animation
