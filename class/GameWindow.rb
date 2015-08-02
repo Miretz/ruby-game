@@ -37,12 +37,6 @@ class GameWindow < Gosu::Window
     end
     @player.move
 
-    @player.collect_stars(@stars)
-
-    if rand(100) < 4 and @stars.size < 5 then
-      @stars.push(Star.new(@star_anim))
-    end
-
     @stars.reject! do |star|
       if star.dead? then
         @player.lose_star()
@@ -51,6 +45,11 @@ class GameWindow < Gosu::Window
       else
         false
       end
+    end
+
+    @player.collect_stars(@stars)
+    if rand(100) < 4 and @stars.size < 5 then
+      @stars.push(Star.new(@star_anim))
     end
 
     @explosions.reject!(&:done?)

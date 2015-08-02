@@ -26,7 +26,7 @@ class Star
   end
 
   def dead?
-    @dead = (Gosu::milliseconds - @start_time) > LIFE_TIME
+    (Gosu::milliseconds - @start_time) > LIFE_TIME
   end
 
 end
