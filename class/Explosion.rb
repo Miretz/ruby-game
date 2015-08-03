@@ -12,10 +12,10 @@ class Explosion
     Gosu::Image.load_tiles(window, SPRITE, 128, 128, false)
   end
 
-  def initialize(animation, x, y)
+  def initialize(animation, x, y, start_frame = 0)
     @animation = animation
     @x, @y = x, y
-    @current_frame = 0
+    @current_frame = start_frame
   end
 
   def update
@@ -35,8 +35,8 @@ class Explosion
     @done ||= @current_frame == @animation.size
   end
 
-  def get_current_frame
-    @current_frame
+  def explosion_peak?
+    @current_frame == 32
   end
 
   private

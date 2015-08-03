@@ -64,8 +64,9 @@ class GameWindow < Gosu::Window
     end
 
     @explosions.each do |expl|
-      if expl.get_current_frame == 0 and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 65 then
+      if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 55 then
         @player.die
+        @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y, 33))
         @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
         if @player.lives < 1
           @running = false
@@ -85,7 +86,8 @@ class GameWindow < Gosu::Window
       @explosions.map(&:draw)
       @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     else
-      @font.draw("GAME OVER! Press Esc to quit...", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      @font.draw("GAME OVER! Your score was #{@player.score}", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      @font.draw("Press Escape to exit the game...", 300, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     end
   end
 
