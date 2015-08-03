@@ -35,6 +35,10 @@ class Explosion
     @done ||= @current_frame == @animation.size
   end
 
+  def get_current_frame
+    @current_frame
+  end
+
   private
 
   def current_frame

@@ -9,12 +9,12 @@ require_relative 'Explosion'
 class GameWindow < Gosu::Window
   def initialize
     super Constants::WIDTH, Constants::HEIGHT
-    self.caption = "Gosu Tutorial Game"
+    self.caption = "Gosu Space Game by Miretz"
 
     @background_image = Gosu::Image.new("media/Space.png", :tileable => true)
   
     @player = Player.new
-    @player.warp(640, 480)
+    @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
 
     @star_anim = Gosu::Image::load_tiles("media/Star.png", 25, 25)
     @stars = Array.new
@@ -23,9 +23,17 @@ class GameWindow < Gosu::Window
     @explosions = []
 
     @font = Gosu::Font.new(20)
+
+    @running = true
+
   end
 
   def update
+
+    if not @running
+      return
+    end
+
     if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
       @player.turn_left
     end
@@ -34,6 +42,9 @@ class GameWindow < Gosu::Window
     end
     if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpButton0 then
       @player.accelerate
+    end
+    if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpButton1 then
+      @player.reverse
     end
     @player.move
 
@@ -53,9 +64,12 @@ class GameWindow < Gosu::Window
     end
 
     @explosions.each do |expl|
-      next unless expl.done?
-      if Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 35 then
+      if expl.get_current_frame == 0 and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 65 then
         @player.die
+        @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
+        if @player.lives < 1
+          @running = false
+        end
       end
     end
     @explosions.reject!(&:done?)
@@ -64,10 +78,15 @@ class GameWindow < Gosu::Window
 
   def draw
   	@background_image.draw(0, 0, ZOrder::Background)
-    @player.draw
-  	@stars.each { |star| star.draw }
-    @explosions.map(&:draw)
-    @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+    
+    if @running
+      @player.draw
+  	  @stars.each { |star| star.draw }
+      @explosions.map(&:draw)
+      @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+    else
+      @font.draw("GAME OVER! Press Esc to quit...", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+    end
   end
 
   def button_down(id)
