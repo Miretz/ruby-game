@@ -52,6 +52,12 @@ class GameWindow < Gosu::Window
       @stars.push(Star.new(@star_anim))
     end
 
+    @explosions.each do |expl|
+      next unless expl.done?
+      if Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 35 then
+        @player.die
+      end
+    end
     @explosions.reject!(&:done?)
     @explosions.map(&:update)
   end
@@ -61,7 +67,7 @@ class GameWindow < Gosu::Window
     @player.draw
   	@stars.each { |star| star.draw }
     @explosions.map(&:draw)
-    @font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+    @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
   end
 
   def button_down(id)

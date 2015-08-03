@@ -4,6 +4,9 @@ require_relative 'Constants'
 require_relative 'ZOrder'
 
 class Player
+
+  attr_reader :x, :y, :lives, :score
+
   def initialize
     
     @image = Gosu::Image.new("media/Starfighter.png")
@@ -11,6 +14,7 @@ class Player
 
     @x = @y = @vel_x = @vel_y = @angle = 0.0
     @score = 0
+    @lives = 5
   end
 
   def warp(x, y)
@@ -44,8 +48,8 @@ class Player
     @image.draw_rot(@x, @y, 1, @angle)
   end
 
-  def score
-    @score
+  def die
+    @lives -= 1
   end
 
   def lose_star

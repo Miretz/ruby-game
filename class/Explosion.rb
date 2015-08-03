@@ -6,6 +6,8 @@ class Explosion
   FRAME_DELAY = 10 # ms
   SPRITE = media_path('explosion.png')
 
+  attr_reader :x, :y
+
   def self.load_animation(window)
     Gosu::Image.load_tiles(window, SPRITE, 128, 128, false)
   end
