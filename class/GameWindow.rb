@@ -28,6 +28,9 @@ class GameWindow < Gosu::Window
     @music.volume = 0.5
     @music.play(true)
 
+    @time = 90
+    @last_time = Gosu::milliseconds
+
     @running = true
 
   end
@@ -36,6 +39,15 @@ class GameWindow < Gosu::Window
 
     if not @running
       return
+    end
+
+    if (Gosu::milliseconds - @last_time) > 1000
+      @time -= 1
+      @last_time = Gosu::milliseconds
+    end
+
+    if @time < 0
+      @running = false
     end
 
     if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
@@ -89,6 +101,7 @@ class GameWindow < Gosu::Window
   	  @stars.each { |star| star.draw }
       @explosions.map(&:draw)
       @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      @font.draw("Time: #{@time}", 720, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     else
       @font.draw("GAME OVER! Your score was #{@player.score}", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
       @font.draw("Press Escape to exit the game...", 300, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
