@@ -24,6 +24,10 @@ class GameWindow < Gosu::Window
 
     @font = Gosu::Font.new(20)
 
+    @music = Gosu::Song.new('media/music.wav')
+    @music.volume = 0.5
+    @music.play(true)
+
     @running = true
 
   end
@@ -64,9 +68,9 @@ class GameWindow < Gosu::Window
     end
 
     @explosions.each do |expl|
-      if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 55 then
+      if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 65 then
         @player.die
-        @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y, 33))
+        @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y, 25))
         @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
         if @player.lives < 1
           @running = false

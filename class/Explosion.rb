@@ -16,6 +16,9 @@ class Explosion
     @animation = animation
     @x, @y = x, y
     @current_frame = start_frame
+
+    num = 1 + rand(2)
+    Gosu::Sample.new(media_path("explosion#{num}.wav")).play
   end
 
   def update
@@ -36,7 +39,7 @@ class Explosion
   end
 
   def explosion_peak?
-    @current_frame == 32
+    @current_frame == 24
   end
 
   private
