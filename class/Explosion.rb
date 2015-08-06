@@ -1,15 +1,12 @@
-def media_path(file)
-  File.join(File.dirname(File.dirname(__FILE__)),'media',file)
-end
+require_relative 'Constants'
 
 class Explosion
   FRAME_DELAY = 10 # ms
-  SPRITE = media_path('explosion.png')
 
   attr_reader :x, :y
 
   def self.load_animation(window)
-    Gosu::Image.load_tiles(window, SPRITE, 128, 128, false)
+    Gosu::Image.load_tiles(window, Constants::EXPLOSION_SPRITE, 128, 128, false)
   end
 
   def initialize(animation, x, y, start_frame = 0)
@@ -18,7 +15,7 @@ class Explosion
     @current_frame = start_frame
 
     num = 1 + rand(2)
-    Gosu::Sample.new(media_path("explosion#{num}.wav")).play
+    Gosu::Sample.new("media/explosion#{num}.wav").play
   end
 
   def update

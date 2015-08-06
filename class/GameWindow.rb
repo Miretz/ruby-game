@@ -9,14 +9,14 @@ require_relative 'Explosion'
 class GameWindow < Gosu::Window
   def initialize
     super Constants::WIDTH, Constants::HEIGHT
-    self.caption = "Gosu Space Game by Miretz"
+    self.caption = Constants::CAPTION
 
-    @background_image = Gosu::Image.new("media/Space.png", :tileable => true)
+    @background_image = Gosu::Image.new(Constants::BACKGROUND, :tileable => true)
   
     @player = Player.new
     @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
 
-    @star_anim = Gosu::Image::load_tiles("media/Star.png", 25, 25)
+    @star_anim = Gosu::Image::load_tiles(Constants::STAR_SPRITE, 25, 25)
     @stars = Array.new
 
     @explosion_anim = Explosion.load_animation(self)
@@ -24,11 +24,11 @@ class GameWindow < Gosu::Window
 
     @font = Gosu::Font.new(20)
 
-    @music = Gosu::Song.new('media/music.wav')
+    @music = Gosu::Song.new(Constants::MUSIC)
     @music.volume = 0.5
     @music.play(true)
 
-    @time = 90
+    @time = Constants::TIME_LIMIT
     @last_time = Gosu::milliseconds
 
     @running = true
