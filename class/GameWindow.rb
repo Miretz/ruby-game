@@ -41,29 +41,22 @@ class GameWindow < Gosu::Window
       return
     end
 
-    if (Gosu::milliseconds - @last_time) > 1000
-      @time -= 1
-      @last_time = Gosu::milliseconds
-    end
+    handleTimeLimit
+    handlePlayerMove
+    handleStarExplosions
 
-    if @time < 0
-      @running = false
-    end
+    @player.collect_stars(@stars)
 
-    if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
-      @player.turn_left
-    end
-    if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight then
-      @player.turn_right
-    end
-    if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpButton0 then
-      @player.accelerate
-    end
-    if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpButton1 then
-      @player.reverse
-    end
-    @player.move
+    generateNewStars
+  end
 
+  def generateNewStars
+     if rand(100) < 4 and @stars.size < 5 then
+      @stars.push(Star.new(@star_anim))
+    end
+  end
+
+  def handleStarExplosions
     @stars.reject! do |star|
       if star.dead? then
         @player.lose_star()
@@ -72,11 +65,6 @@ class GameWindow < Gosu::Window
       else
         false
       end
-    end
-
-    @player.collect_stars(@stars)
-    if rand(100) < 4 and @stars.size < 5 then
-      @stars.push(Star.new(@star_anim))
     end
 
     @explosions.each do |expl|
@@ -91,6 +79,33 @@ class GameWindow < Gosu::Window
     end
     @explosions.reject!(&:done?)
     @explosions.map(&:update)
+  end
+
+  def handleTimeLimit
+    if (Gosu::milliseconds - @last_time) > 1000
+      @time -= 1
+      @last_time = Gosu::milliseconds
+    end
+
+    if @time < 0
+      @running = false
+    end
+  end
+
+  def handlePlayerMove
+    if Gosu::button_down? Gosu::KbLeft or Gosu::button_down? Gosu::GpLeft then
+      @player.turn_left
+    end
+    if Gosu::button_down? Gosu::KbRight or Gosu::button_down? Gosu::GpRight then
+      @player.turn_right
+    end
+    if Gosu::button_down? Gosu::KbUp or Gosu::button_down? Gosu::GpButton0 then
+      @player.accelerate
+    end
+    if Gosu::button_down? Gosu::KbDown or Gosu::button_down? Gosu::GpButton1 then
+      @player.reverse
+    end
+    @player.move
   end
 
   def draw
