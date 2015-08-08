@@ -5,7 +5,7 @@ require_relative 'ZOrder'
 
 class Player
 
-  attr_reader :x, :y, :lives, :score
+  attr_reader :x, :y, :lives, :score, :angle
 
   def initialize
     

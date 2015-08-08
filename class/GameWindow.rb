@@ -5,6 +5,7 @@ require_relative 'ZOrder'
 require_relative 'Player'
 require_relative 'Star'
 require_relative 'Explosion'
+require_relative 'Bullet'
 
 class GameWindow < Gosu::Window
   def initialize
@@ -21,6 +22,7 @@ class GameWindow < Gosu::Window
 
     @explosion_anim = Explosion.load_animation(self)
     @explosions = []
+    @bullets = []
 
     @font = Gosu::Font.new(20)
 
@@ -45,9 +47,23 @@ class GameWindow < Gosu::Window
     handlePlayerMove
     handleStarExplosions
 
+    @bullets.each { |bullet| bullet.move }
     @player.collect_stars(@stars)
 
     generateNewStars
+    removeOffscreenBullets
+  end
+
+  def removeOffscreenBullets
+    @bullets.reject! do |bullet|
+      if bullet.x < 0 or bullet.x > Constants::WIDTH then
+        true
+      elsif bullet.y < 0 or bullet.y > Constants::HEIGHT then
+        true
+      else
+        false
+      end
+    end
   end
 
   def generateNewStars
@@ -112,6 +128,7 @@ class GameWindow < Gosu::Window
   	@background_image.draw(0, 0, ZOrder::Background)
     
     if @running
+      @bullets.each { |bullet| bullet.draw }
       @player.draw
   	  @stars.each { |star| star.draw }
       @explosions.map(&:draw)
@@ -126,6 +143,11 @@ class GameWindow < Gosu::Window
   def button_down(id)
     if id == Gosu::KbEscape
       close
+    end
+    if id == Gosu::KbSpace
+      if @bullets.size < 10
+        @bullets.push(Bullet.new(@player.x, @player.y, @player.angle))
+      end
     end
   end
 
