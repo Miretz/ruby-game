@@ -15,7 +15,7 @@ class Explosion
     @current_frame = start_frame
 
     num = 1 + rand(2)
-    Gosu::Sample.new("#{Constants::MEDIA_DIR}/explosion#{num}.wav").play
+    Gosu::Sample.new("#{Constants::MEDIA_DIR}/Explosion#{num}.wav").play
   end
 
   def update

@@ -50,20 +50,18 @@ class Player
   end
 
   def draw
-    @image.draw_rot(@x, @y, 1, @angle)
+    @image.draw_rot(@x, @y, ZOrder::Player, @angle)
   end
 
   def die
     @lives -= 1
   end
 
-  def lose_star
-    if @score > 0
-      @score -= 10
-    end
+  def killedEnemy
+    @score += 5
   end
 
-  def collect_stars(stars)
+  def collectStars(stars)
     stars.reject! do |star|
       if Gosu::distance(@x, @y, star.x, star.y) < 35 then
         @score += 10

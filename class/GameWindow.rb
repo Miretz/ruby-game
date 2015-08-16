@@ -6,35 +6,42 @@ require_relative 'Player'
 require_relative 'Star'
 require_relative 'Explosion'
 require_relative 'Bullet'
+require_relative 'Enemy'
 
 class GameWindow < Gosu::Window
   def initialize
-    super Constants::WIDTH, Constants::HEIGHT
+    super Constants::WIDTH, Constants::HEIGHT, :fullscreen => true
     self.caption = Constants::CAPTION
 
     @background_image = Gosu::Image.new(Constants::BACKGROUND, :tileable => true)
-  
+    @star_anim = Gosu::Image::load_tiles(Constants::STAR_SPRITE, 25, 25)
+    @explosion_anim = Explosion.load_animation(self)
+    @font = Gosu::Font.new(20)
+    @music = Gosu::Song.new(Constants::MUSIC)
+
+    @music.volume = 0.7
+    @music.play(true)
+
+    start
+  end
+
+  def start
     @player = Player.new
     @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
 
-    @star_anim = Gosu::Image::load_tiles(Constants::STAR_SPRITE, 25, 25)
+    @enemy = Enemy.new
+    @enemy.warp(Constants::WIDTH / 2.0, Constants::HEIGHT - 40)
+
     @stars = Array.new
 
-    @explosion_anim = Explosion.load_animation(self)
     @explosions = []
     @bullets = []
 
-    @font = Gosu::Font.new(20)
-
-    @music = Gosu::Song.new(Constants::MUSIC)
-    @music.volume = 0.5
-    @music.play(true)
 
     @time = Constants::TIME_LIMIT
     @last_time = Gosu::milliseconds
 
     @running = true
-
   end
 
   def update
@@ -46,12 +53,38 @@ class GameWindow < Gosu::Window
     handleTimeLimit
     handlePlayerMove
     handleStarExplosions
+    handleEnemy
+    handleBullets
 
-    @bullets.each { |bullet| bullet.move }
-    @player.collect_stars(@stars)
+    @player.collectStars(@stars)
 
     generateNewStars
     removeOffscreenBullets
+  end
+
+  def handleEnemy
+    @enemy.move(@player.x, @player.y)
+    if Gosu::distance(@enemy.x, @enemy.y, @player.x, @player.y) < 60
+      @explosions.push(Explosion.new(@explosion_anim, @enemy.x, @enemy.y))
+      @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y))
+      @enemy.die
+      @player.die
+      @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
+      if @player.lives < 1
+        @running = false
+      end
+    end
+  end
+
+  def handleBullets
+    @bullets.each do |bullet|
+      bullet.move
+      if Gosu::distance(@enemy.x, @enemy.y, bullet.x, bullet.y) < 60
+        @explosions.push(Explosion.new(@explosion_anim, @enemy.x, @enemy.y))
+        @enemy.die
+        @player.killedEnemy
+      end
+    end
   end
 
   def removeOffscreenBullets
@@ -75,8 +108,6 @@ class GameWindow < Gosu::Window
   def handleStarExplosions
     @stars.reject! do |star|
       if star.dead? then
-        @player.lose_star()
-        @explosions.push(Explosion.new(@explosion_anim, star.x, star.y))
         true
       else
         false
@@ -84,7 +115,7 @@ class GameWindow < Gosu::Window
     end
 
     @explosions.each do |expl|
-      if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 65 then
+      if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 45 then
         @player.die
         @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y, 25))
         @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
@@ -130,19 +161,24 @@ class GameWindow < Gosu::Window
     if @running
       @bullets.each { |bullet| bullet.draw }
       @player.draw
+      @enemy.draw
   	  @stars.each { |star| star.draw }
       @explosions.map(&:draw)
       @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
       @font.draw("Time: #{@time}", 720, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     else
       @font.draw("GAME OVER! Your score was #{@player.score}", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
-      @font.draw("Press Escape to exit the game...", 300, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      @font.draw("Press Enter to restart or Escape to exit the game...", 200, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      
     end
   end
 
   def button_down(id)
     if id == Gosu::KbEscape
       close
+    end
+    if id == Gosu::KbReturn
+      start
     end
     if id == Gosu::KbSpace
       if @bullets.size < 10
