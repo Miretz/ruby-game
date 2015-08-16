@@ -1,6 +1,9 @@
 # ruby-game
 Game made with Ruby - Work in progress
 
+#Screenshot:
+<img src="screenshot.png" />
+
 #Objectives:
 Collect as many stars as you can in 90 seconds.
 The enemy ship will try to stop you.
