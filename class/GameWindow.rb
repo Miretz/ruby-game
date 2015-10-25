@@ -159,11 +159,11 @@ class GameWindow < Gosu::Window
   	@background_image.draw(0, 0, ZOrder::Background)
     
     if @running
-      @bullets.each { |bullet| bullet.draw }
+      @bullets.each(&:draw)
       @player.draw
       @enemy.draw
-  	  @stars.each { |star| star.draw }
-      @explosions.map(&:draw)
+  	  @stars.each(&:draw)
+      @explosions.each(&:draw)
       @font.draw("Score: #{@player.score}, Lives: #{@player.lives}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
       @font.draw("Time: #{@time}", 720, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     else

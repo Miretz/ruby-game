@@ -1,8 +1,6 @@
 require_relative 'Constants'
 
 class Explosion
-  FRAME_DELAY = 10 # ms
-
   attr_reader :x, :y
 
   def self.load_animation(window)
@@ -48,7 +46,7 @@ class Explosion
   def frame_expired?
     now = Gosu.milliseconds
     @last_frame ||= now
-    if(now - @last_frame) > FRAME_DELAY
+    if(now - @last_frame) > Constants::EXPLOSION_DELAY
       @last_frame = now
     end
   end

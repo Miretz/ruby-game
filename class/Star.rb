@@ -6,8 +6,6 @@ require_relative 'ZOrder'
 class Star
   attr_reader :x, :y
 
-  LIFE_TIME = 6000 # ms
-
   def initialize(animation)
     @animation = animation
     @color = Gosu::Color.new(0xff_000000)
@@ -26,7 +24,7 @@ class Star
   end
 
   def dead?
-    (Gosu::milliseconds - @start_time) > LIFE_TIME
+    (Gosu::milliseconds - @start_time) > Constants::STAR_LIFE_TIME
   end
 
 end
