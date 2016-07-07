@@ -6,18 +6,21 @@ require_relative 'ZOrder'
 class Bullet
 
   attr_reader :x, :y
+  
+  @@speed = 11
 
   def initialize(x, y, angle)
-    @image = Gosu::Image.new(Constants::BULLET_SPRITE)
+    @image = Gosu::Image.new($spr_bullet)
     @x, @y = x, y
     @angle = angle
-
-    2.times { move }
+    
+    # move forward a bit, so it appears in the front of the ship
+    2.times { move } 
   end
 
   def move
-    @x += Gosu::offset_x(@angle, Constants::BULLET_SPEED)
-    @y += Gosu::offset_y(@angle, Constants::BULLET_SPEED)
+    @x += Gosu::offset_x(@angle, @@speed)
+    @y += Gosu::offset_y(@angle, @@speed)
   end
 
   def draw

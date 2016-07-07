@@ -4,7 +4,7 @@ class Explosion
   attr_reader :x, :y
 
   def self.load_animation(window)
-    Gosu::Image.load_tiles(window, Constants::EXPLOSION_SPRITE, 128, 128, false)
+    Gosu::Image.load_tiles(window, $spr_explosion, 128, 128, false)
   end
 
   def initialize(animation, x, y, start_frame = 0)
@@ -13,7 +13,7 @@ class Explosion
     @current_frame = start_frame
 
     num = 1 + rand(2)
-    Gosu::Sample.new("#{Constants::MEDIA_DIR}/Explosion#{num}.wav").play
+    Gosu::Sample.new("#{$media_dir}/Explosion#{num}.wav").play
   end
 
   def update
@@ -23,10 +23,7 @@ class Explosion
   def draw
     return if done?
     image = current_frame
-    image.draw(
-      @x - image.width / 2.0,
-      @y - image.height / 1.5,
-      0)
+    image.draw(@x - image.width / 2.0, @y - image.height / 1.5, 0)
   end
 
   def done?
@@ -46,7 +43,7 @@ class Explosion
   def frame_expired?
     now = Gosu.milliseconds
     @last_frame ||= now
-    if(now - @last_frame) > Constants::EXPLOSION_DELAY
+    if(now - @last_frame) > 10
       @last_frame = now
     end
   end

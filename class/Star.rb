@@ -12,8 +12,8 @@ class Star
     @color.red = rand(256 - 40) + 40
     @color.green = rand(256 - 40) + 40
     @color.blue = rand(256 - 40) + 40
-    @x = rand * Constants::WIDTH
-    @y = rand * Constants::HEIGHT
+    @x = rand * $res_width
+    @y = rand * $res_height
     @start_time = Gosu::milliseconds
   end
 
@@ -24,7 +24,7 @@ class Star
   end
 
   def dead?
-    (Gosu::milliseconds - @start_time) > Constants::STAR_LIFE_TIME
+    (Gosu::milliseconds - @start_time) > 6000
   end
 
 end

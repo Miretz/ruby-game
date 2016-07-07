@@ -7,10 +7,10 @@ class Enemy
 
   attr_reader :x, :y, :lives, :score, :angle
 
-  def initialize
-    
-    @image = Gosu::Image.new(Constants::ENEMY_SPRITE)
+  @@speed = 3
 
+  def initialize
+    @image = Gosu::Image.new($spr_enemy)
     @x = @y = @vel_x = @vel_y = @angle = 0.0
   end
 
@@ -20,13 +20,13 @@ class Enemy
 
   def move(xp, yp)
     @angle = Gosu.angle(@x, @y, xp, yp)
-    @x += Gosu::offset_x(@angle, Constants::ENEMY_SPEED)
-    @y += Gosu::offset_y(@angle, Constants::ENEMY_SPEED)
+    @x += Gosu::offset_x(@angle, @@speed)
+    @y += Gosu::offset_y(@angle, @@speed)
   end
 
   def die
-    w = 0 + rand(Constants::WIDTH + 40)
-    self.warp(w, Constants::HEIGHT + 40)
+    w = 0 + rand($res_width + 40)
+    self.warp(w, $res_height + 40)
   end
 
   def draw

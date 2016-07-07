@@ -9,28 +9,26 @@ require_relative 'Bullet'
 require_relative 'Enemy'
 
 class GameWindow < Gosu::Window
+  
   def initialize
-    super Constants::WIDTH, Constants::HEIGHT, :fullscreen => true
-    self.caption = Constants::CAPTION
-
-    @background_image = Gosu::Image.new(Constants::BACKGROUND, :tileable => true)
-    @star_anim = Gosu::Image::load_tiles(Constants::STAR_SPRITE, 25, 25)
+    super $res_width, $res_height, :fullscreen => true
+    self.caption = $caption
+    @background_image = Gosu::Image.new($spr_background, :tileable => true)
+    @star_anim = Gosu::Image::load_tiles($spr_star, 25, 25)
     @explosion_anim = Explosion.load_animation(self)
     @font = Gosu::Font.new(20)
-    @music = Gosu::Song.new(Constants::MUSIC)
-
+    @music = Gosu::Song.new($snd_music)
     @music.volume = 0.7
     @music.play(true)
-
     start
   end
 
   def start
     @player = Player.new
-    @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
+    @player.warp($res_width / 2.0, $res_height / 2.0)
 
     @enemy = Enemy.new
-    @enemy.warp(Constants::WIDTH / 2.0, Constants::HEIGHT - 40)
+    @enemy.warp($res_width / 2.0, $res_height - 40)
 
     @stars = Array.new
 
@@ -38,7 +36,7 @@ class GameWindow < Gosu::Window
     @bullets = []
 
 
-    @time = Constants::TIME_LIMIT
+    @time = $time_limit
     @last_time = Gosu::milliseconds
 
     @running = true
@@ -69,7 +67,7 @@ class GameWindow < Gosu::Window
       @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y))
       @enemy.die
       @player.die
-      @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
+      @player.warp($res_width / 2.0, $res_height / 2.0)
       if @player.lives < 1
         @running = false
       end
@@ -89,9 +87,9 @@ class GameWindow < Gosu::Window
 
   def removeOffscreenBullets
     @bullets.reject! do |bullet|
-      if bullet.x < 0 or bullet.x > Constants::WIDTH then
+      if bullet.x < 0 or bullet.x > $res_width then
         true
-      elsif bullet.y < 0 or bullet.y > Constants::HEIGHT then
+      elsif bullet.y < 0 or bullet.y > $res_height then
         true
       else
         false
@@ -118,7 +116,7 @@ class GameWindow < Gosu::Window
       if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 45 then
         @player.die
         @explosions.push(Explosion.new(@explosion_anim, @player.x, @player.y, 25))
-        @player.warp(Constants::WIDTH / 2.0, Constants::HEIGHT / 2.0)
+        @player.warp($res_width / 2.0, $res_height / 2.0)
         if @player.lives < 1
           @running = false
         end

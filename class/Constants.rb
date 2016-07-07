@@ -1,19 +1,22 @@
 module Constants
-  CAPTION = "Gosu Space Game by Miretz"
-  WIDTH = 800
-  HEIGHT = 600
-  TIME_LIMIT = 90
-  BULLET_SPEED = 11
-  ENEMY_SPEED = 3
-  EXPLOSION_DELAY = 10 # ms
-  STAR_LIFE_TIME = 6000 # ms
-  MEDIA_DIR = "media"
-  BACKGROUND = "#{MEDIA_DIR}/Space.png"
-  STAR_SPRITE = "#{MEDIA_DIR}/Star.png"
-  STARFIGHTER_SPRITE = "#{MEDIA_DIR}/Starfighter.png"
-  ENEMY_SPRITE = "#{MEDIA_DIR}/Enemy.png"
-  EXPLOSION_SPRITE = "#{MEDIA_DIR}/Explosion.png"
-  BULLET_SPRITE = "#{MEDIA_DIR}/Bullet.png"
-  MUSIC = "#{MEDIA_DIR}/Music.wav"
-  BEEP_SOUND = "#{MEDIA_DIR}/Beep.wav"
+  $caption = 'Gosu Space Game by Miretz'
+  $media_dir = 'media'
+    
+  #resolution
+  $res_width = 800
+  $res_height = 600
+  
+  $time_limit = 90
+  
+  #sprites
+  $spr_background = "#{$media_dir}/Space.png"
+  $spr_star = "#{$media_dir}/Star.png"
+  $spr_fighter = "#{$media_dir}/Starfighter.png"
+  $spr_enemy = "#{$media_dir}/Enemy.png"
+  $spr_explosion = "#{$media_dir}/Explosion.png"
+  $spr_bullet = "#{$media_dir}/Bullet.png"
+  
+  #sounds
+  $snd_music = "#{$media_dir}/Music.wav"
+  $snd_beep = "#{$media_dir}/Beep.wav"
 end

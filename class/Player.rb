@@ -9,8 +9,8 @@ class Player
 
   def initialize
     
-    @image = Gosu::Image.new(Constants::STARFIGHTER_SPRITE)
-    @beep = Gosu::Sample.new(Constants::BEEP_SOUND)
+    @image = Gosu::Image.new($spr_fighter)
+    @beep = Gosu::Sample.new($snd_beep)
 
     @x = @y = @vel_x = @vel_y = @angle = 0.0
     @score = 0
@@ -42,8 +42,8 @@ class Player
   def move
     @x += @vel_x
     @y += @vel_y
-    @x %= Constants::WIDTH
-    @y %= Constants::HEIGHT
+    @x %= $res_width
+    @y %= $res_height
 
     @vel_x *= 0.95
     @vel_y *= 0.95
