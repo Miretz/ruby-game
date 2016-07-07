@@ -26,24 +26,17 @@ class GameWindow < Gosu::Window
   def start
     @player = Player.new
     @player.warp($res_width / 2.0, $res_height / 2.0)
-
     @enemy = Enemy.new
     @enemy.warp($res_width / 2.0, $res_height - 40)
-
-    @stars = Array.new
-
+    @stars = []
     @explosions = []
     @bullets = []
-
-
     @time = $time_limit
     @last_time = Gosu::milliseconds
-
     @running = true
   end
 
   def update
-
     if not @running
       return
     end
@@ -86,15 +79,7 @@ class GameWindow < Gosu::Window
   end
 
   def removeOffscreenBullets
-    @bullets.reject! do |bullet|
-      if bullet.x < 0 or bullet.x > $res_width then
-        true
-      elsif bullet.y < 0 or bullet.y > $res_height then
-        true
-      else
-        false
-      end
-    end
+    @bullets.reject! { |bullet| (bullet.x < 0 or bullet.x > $res_width) or (bullet.y < 0 or bullet.y > $res_height) }
   end
 
   def generateNewStars
@@ -104,14 +89,7 @@ class GameWindow < Gosu::Window
   end
 
   def handleStarExplosions
-    @stars.reject! do |star|
-      if star.dead? then
-        true
-      else
-        false
-      end
-    end
-
+    @stars.reject! { |star| star.dead? }
     @explosions.each do |expl|
       if expl.explosion_peak? and Gosu::distance(@player.x, @player.y, expl.x, expl.y) < 45 then
         @player.die
@@ -155,7 +133,6 @@ class GameWindow < Gosu::Window
 
   def draw
   	@background_image.draw(0, 0, ZOrder::Background)
-    
     if @running
       @bullets.each(&:draw)
       @player.draw
@@ -166,7 +143,7 @@ class GameWindow < Gosu::Window
       @font.draw("Time: #{@time}", 720, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
     else
       @font.draw("GAME OVER! Your score was #{@player.score}", 300, 300, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
-      @font.draw("Press Enter to restart or Escape to exit the game...", 200, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+      @font.draw('Press Enter to restart or Escape to exit the game...', 200, 320, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
       
     end
   end
